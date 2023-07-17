@@ -1,4 +1,4 @@
-Problem - Reverse a Linked List
+Problem 1- Reverse a Linked List
 sol-
  ListNode* reverseList(ListNode* head) {
         if(head == NULL || head->next==NULL){
@@ -15,3 +15,76 @@ sol-
         }
         return prev;
     }
+Problem 2- Find the middle of the linked list
+sol-
+class Solution {
+public:
+     int getlength(ListNode* head)
+     {
+         int len = 0;
+         while(head!=NULL)
+         {
+             len++;
+             head = head->next;
+         }
+         return len;
+     }
+
+
+    ListNode* middleNode(ListNode* head) {
+        int len  = getlength(head);
+        int ans = len/2;
+        ListNode* temp = head;
+        int cnt = 0;
+        while(cnt<ans){
+            temp=temp->next;
+            cnt++;
+        }
+        return temp;
+    }
+};
+Problem 3-Merge two sorted lists
+sol-
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        //nice explanation by takeuforward
+        if(l1==NULL) return l2;
+        if(l2==NULL) return l1;
+        if(l1->val > l2->val) swap(l1,l2);
+        ListNode * res = l1;
+        while(l1!=NULL && l2!=NULL)
+        {
+            ListNode * temp = NULL;
+            while(l1!=NULL && l1->val<=l2->val)
+            {
+                temp = l1;
+                l1=l1->next;
+            }
+            temp->next = l2;
+            swap(l1,l2);
+        }
+        return res;
+        
+    }
+};
+Problem 4-Add two numbers
+sol-
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+          ListNode *dummy = new ListNode(0);
+        ListNode *curr = dummy;
+        int carry = 0;
+        while(l1 || l2 || carry){
+            int temp = carry + (l1?l1->val:0) + (l2?l2->val:0);
+            if(l1) l1 = l1->next;
+            if(l2) l2 = l2->next;
+
+            curr->next = new ListNode(temp % 10);
+            curr = curr->next;
+            carry = temp / 10;
+        }
+         return dummy -> next;
+    }
+};
