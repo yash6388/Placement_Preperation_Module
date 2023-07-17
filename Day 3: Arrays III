@@ -42,3 +42,50 @@ int majorityElement(vector<int>& nums) {
         }
         return candidate;
     }
+Problem 3- POW(X,N)
+sol-
+class Solution {
+public:
+    double myPow(double x, int n) {
+        
+    }
+};
+Problem 4-Majority Element II
+sol-
+class Solution {
+public:
+    vector<int> majorityElement(vector<int>& nums) {
+        int countMajority = nums.size()/3;
+        unordered_set<int> set;
+        vector<int> output;
+        for(auto num : nums){
+            int count = 0;
+            for(auto element : nums){
+                if(element == num){
+                    count++;
+                }
+            }
+            if(count > countMajority){
+                set.insert(num);
+            }
+        }
+        for(auto it = set.begin(); it != set.end(); it++){
+            output.push_back(*it);
+        }
+        return output;
+    }
+};
+Problem 5-Unique Paths
+sol-
+class Solution {
+public:
+    int uniquePaths(int m, int n) {
+        int N = n+m-2;
+        int r = m-1;
+        double res = 1;
+        for(int i=1;i<=r;i++){
+            res = res * (N-r+i)/i;
+        }
+        return (int)res;
+    }
+};
