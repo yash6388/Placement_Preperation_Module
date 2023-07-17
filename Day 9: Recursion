@@ -1,1 +1,100 @@
+Problem 1- Subsets 2
+sol-
+class Solution {
+public:
+   
+  set<vector<int>> xyz;
+    void gp(int i,vector<int> &v,vector<int> &nums,int n){
+        if(i==n){
+            xyz.insert(v);
+            return;
+        }
 
+        v.push_back(nums[i]);
+        gp(i+1,v,nums,n);
+        v.pop_back();
+        gp(i+1,v,nums,n);
+    }
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        vector<int> v;
+        int n=nums.size();
+        sort(nums.begin(),nums.end());
+        gp(0,v,nums,n);
+        vector<vector<int>> abc;
+        set<vector<int>>:: iterator it;
+        for(it=xyz.begin();it!=xyz.end();++it){
+            abc.push_back(*it);
+        }
+        return abc;
+    }
+};
+Problem 2-Combination Sum
+sol-
+class Solution {
+public:
+   void solve(vector<int> &candidates, int target, vector<vector< int >> &ans, int index, vector< int > &temp)
+        {
+           	// base case 
+
+            if (target < 0 || index >= candidates.size()) return;
+            if (target == 0)
+            {
+                ans.push_back(temp);
+                return;
+            }
+
+           	// processing and call
+           	for (int i = index; i < candidates.size(); i++)
+                {
+           	        temp.push_back(candidates[i]);
+           	        solve(candidates, target - candidates[i], ans, i, temp);
+           	        // back track
+           	        temp.pop_back();
+                }           
+        }
+
+    vector<vector < int>> combinationSum(vector<int> &candidates, int target)
+    {
+        vector<vector < int>> ans;
+        vector<int> t;
+        solve(candidates, target, ans, 0, t);
+        return ans;
+    }
+};
+Problem 3-Palindrome partitioning
+sol-
+class Solution {
+public:
+    vector<vector<string>> partition(string s) {
+        vector<string> temp;        
+        vector<vector<string>> result;
+
+        explore(0, s, temp, result);
+
+        return result;
+    }
+
+    void explore(int l, string s, vector<string> &temp, vector<vector<string>> &result){        
+        if(l >= s.size()){
+            result.push_back(temp);
+            return;
+        }
+
+        for(int k=1;k<=s.size()-l;k++){
+            if(!isPalindrome(s, l, l+k-1)) continue;
+            
+            temp.push_back(s.substr(l, k));
+            explore(l+k, s, temp, result);
+            temp.pop_back();
+        }
+    }
+
+    bool isPalindrome(string s, int l, int r){
+        while(l<=r){
+            if(s[l] != s[r]) return false;
+            l++; r--;
+        }
+
+        return true;
+    }
+};
