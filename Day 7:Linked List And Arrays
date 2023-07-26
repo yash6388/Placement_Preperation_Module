@@ -1,1 +1,121 @@
+Problem 1-Rotate List
+sol-
+ListNode* rotateRight(ListNode* head, int k)
+    {
+        if(head==NULL or head->next==NULL or k==0)
+        {
+            return head;
+        }
 
+        int len=1;
+        ListNode* temp=head;
+        while(temp->next!=NULL)
+        {
+            len++;
+            temp=temp->next;
+        }
+
+        temp->next=head;
+        k=k%len;
+        k=len-k;
+
+        ListNode* curr=temp;
+        while(k--)
+        {
+            curr=curr->next;
+        }
+
+        head=curr->next;
+        curr->next=NULL;
+
+        return head;
+
+    }
+Problem 2-3Sum
+sol-
+ vector<vector<int>> threeSum(vector<int>& nums) {
+        int n = nums.size();
+        vector<vector<int>> result;
+        sort(nums.begin(),nums.end());
+        if(n<3) return {};
+        for(int i=0;i<n-2;i++){
+            if(i==0 || nums[i]!=nums[i-1]){ 
+                int j = i+1, k = n-1;
+                while(j<k){
+                    int sum = nums[i] + nums[j] + nums[k];
+                    if(sum==0){ 
+                    result.push_back({nums[i],nums[j],nums[k]});
+                        while(j<k && nums[j]==nums[j+1]) j++;
+                        while(j<k && nums[k]==nums[k-1]) k--;
+                        j++;k--;
+                    }
+                    else if(sum>0) k--;
+                    
+                    else
+                        j++;
+                }
+
+            }
+
+        }
+        return result;
+    }
+Problem 3-Max Consecutive Ones
+sol-
+int findMaxConsecutiveOnes(vector<int>& nums) {
+        int maxi = INT_MIN,count=0;
+        for(int i=0;i<nums.size();i++){
+            //count=0;
+            if(nums[i]==1)
+                count++;
+                else 
+                count =0;
+               
+            maxi=max(maxi,count);
+            
+           
+            
+        }
+        return maxi;
+
+    }
+Problem 4-Remove Duplicates from Sorted Array
+sol-
+int removeDuplicates(vector<int>& nums) {
+       int n = nums.size();
+        int i=1;
+        
+        for( int j=1 ; j<n ; j++ ){
+            if( nums[j] != nums[j-1] ){
+                nums[i] = nums[j];
+                i++;
+            }
+        }
+        return i;
+    }
+}
+Problem 5-Trapping Rain Water
+sol-
+ int trap(vector<int>& height) {
+        int n=height.size();
+       int lmax[n]; lmax[0] = height[0];
+        
+    for(int i=1;i<n;i++){
+        int temp = max(height[i], lmax[i-1]);
+        lmax[i] = temp;
+    }
+    
+    int rmax[n]; rmax[n-1] = height[n-1];
+    for(int i=n-2; i>=0 ;i--){
+        int temp = max(height[i], rmax[i+1]);
+        rmax[i] = temp;
+    }
+    
+    int water=0;
+    for(int i=1;i<n-1;i++){
+        water+= min(lmax[i], rmax[i]) - height[i];
+    }
+    
+    return water;
+        
+    }
