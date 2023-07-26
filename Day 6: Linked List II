@@ -1,1 +1,185 @@
+Problem 1- Linked List Cycle
+sol-
+bool hasCycle(ListNode *head) {
+         if(head == NULL) return NULL;
+        ListNode* slow  = head,*fast=head,*entry = head;
+        while(fast->next!=NULL && fast->next->next!=NULL)
+        {
+            slow = slow->next;
+            fast=fast->next->next;
+            if(slow==fast)
+            {
+                while(entry!=slow)
+                {
+                    slow=slow->next;
+                    entry=entry->next;
+                }
+                return true;
+            }
+        }
 
+           return false; 
+    }
+Problem 2-Reverse Nodes in k-Group
+sol-
+void reverse(ListNode* &prev, ListNode* &head, ListNode* &tail){
+
+     ListNode* a = tail->next;
+     tail->next = NULL;
+
+     prev->next = NULL;
+
+     ListNode* p = NULL;
+     ListNode* curr = head;
+
+     while(curr != NULL){
+         ListNode* next = curr->next;
+         curr->next = p;
+         p = curr;
+         curr = next;
+     }
+
+     prev->next = tail;
+     tail = head;
+     head = prev->next;
+
+     tail->next = a;
+
+
+
+ }
+
+
+  void solve(ListNode* &prev, ListNode* &head, ListNode* &tail, int k){
+      if(tail == NULL || head == NULL){
+          return;
+      }
+
+      reverse(prev, head, tail);
+
+      prev = tail;
+      head = tail->next;
+
+      int count = 1;
+      tail=head;
+
+       while(count < k){
+           if(tail == NULL || tail->next == NULL) {return;}
+            tail = tail->next;
+            count++;
+        }
+
+        solve(prev, head, tail, k);
+  }
+
+
+
+    ListNode* reverseKGroup(ListNode* head, int k) {
+        ListNode* prev = new ListNode(-1);
+        prev->next = head;
+
+        int count = 1;
+
+        ListNode* tail = head;
+
+        while(count < k){
+            tail = tail->next;
+            count++;
+        }
+
+        ListNode* ans = tail;
+
+        solve(prev, head, tail, k);
+
+        return ans;
+    }
+
+Problem 3-Intersection of Two Linked Lists
+sol-
+ ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+          int l1 = 0;
+        int l2 = 0;
+
+        ListNode *tmp1 = headA, *tmp2 = headB;
+        while(tmp1){
+            tmp1 = tmp1->next;
+            l1++;
+        }
+
+        while(tmp2){
+            tmp2 = tmp2->next;
+            l2++;
+        }
+        tmp1 = headA,tmp2 = headB;
+
+        if(l1>l2){
+            for(int i=0;i<l1-l2;i++){
+                tmp1 = tmp1->next;
+            }
+        }
+
+        if(l2>l1){
+            for(int i=0;i<l2-l1;i++){
+                tmp2 = tmp2->next;
+            }
+        }
+
+        while(tmp1 != tmp2){
+            tmp1 = tmp1->next;
+            tmp2 = tmp2->next;
+        }
+
+        return tmp1;
+    }
+Problem 4-Palindrome Linked List
+sol-
+ bool checkpalindrome(vector<int> arr){
+        int n = arr.size();
+        int s=0;
+        int e = n-1;
+        while(s<=e){
+            if(arr[s]!=arr[e]){
+                return 0;
+                
+            }
+            s++;
+            e--;
+        }
+        return 1;
+    }
+public:
+    bool isPalindrome(ListNode* head) {
+        vector<int> arr;
+        ListNode* temp = head;
+        while(temp!=NULL){
+
+            arr.push_back(temp->val);
+            temp = temp->next;
+            
+        }
+        return checkpalindrome(arr);
+   
+    }
+Problem 5-Linked List Cycle II
+sol-
+ListNode *detectCycle(ListNode *head) {
+        if(head == NULL) return NULL;
+        ListNode* slow  = head,*fast=head,*entry = head;
+        while(fast->next!=NULL && fast->next->next!=NULL)
+        {
+            slow = slow->next;
+            fast=fast->next->next;
+            if(slow==fast)
+            {
+                while(entry!=slow)
+                {
+                    slow=slow->next;
+                    entry=entry->next;
+                }
+                return slow;
+            }
+        }
+
+           return NULL; 
+        
+    }
