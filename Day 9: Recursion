@@ -98,3 +98,55 @@ public:
         return true;
     }
 };
+Problem 4-Combination Sum II
+sol-
+void solve(vector<int>&candidates, vector<vector<int>>&ans,vector<int>&vec,int tar,int sum,int i){
+
+if(sum==tar){
+        ans.push_back(vec);
+        return;
+    }
+    if(i==candidates.size()){
+        return;
+    }
+    if(sum>tar){
+        return;
+    }
+    
+        vec.push_back(candidates[i]);                    
+        solve(candidates,ans,vec,tar,sum+candidates[i],i+1);
+        vec.pop_back();
+        while(i<candidates.size()-1 and candidates[i]==candidates[i+1])i++;       
+        solve(candidates,ans,vec,tar,sum,i+1);             
+
+}
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+          vector<vector<int>> ans;
+         vector<int>vec;
+         sort(candidates.begin(),candidates.end());
+         int sum=0;
+         solve(candidates,ans,vec,target,sum,0);
+         return ans;
+    }
+};
+Problem 5- Permutation Sequence
+sol-
+public:
+    string getPermutation(int n, int k) {
+        string ans="";
+        int fact=1;
+        k=k-1;
+        vector <int> arr;
+        for(int i=1;i<=n;i++){fact=fact*i;arr.push_back(i);}
+        fact=fact/n;
+        while(1){
+            ans+=(to_string(arr[k/fact]));
+            arr.erase(arr.begin()+k/fact);
+            
+            if(arr.size()==0)break;
+            k=k%fact;
+            fact=fact/(int)arr.size();
+        }
+        return ans;
+    }
+};
