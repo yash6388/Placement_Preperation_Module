@@ -1,1 +1,141 @@
+Problem 1-N meetings in one room
+sol-
+bool static comparator(struct meeting m1, meeting m2) {
+         if (m1.end < m2.end) return true;
+         else if (m1.end > m2.end) return false;
+         else if (m1.pos < m2.pos) return true;
+         return false;
+      }
+   void maxMeetings(int s[], int e[], int n) {
+      struct meeting meet[n];
+      for (int i = 0; i < n; i++) {
+         meet[i].start = s[i], meet[i].end = e[i], meet[i].pos = i + 1;
+      }
 
+      sort(meet, meet + n, comparator);
+
+      vector < int > answer;
+
+      int limit = meet[0].end;
+      answer.push_back(meet[0].pos);
+
+      for (int i = 1; i < n; i++) {
+         if (meet[i].start > limit) {
+            limit = meet[i].end;
+            answer.push_back(meet[i].pos);
+         }
+      }
+Problem 2-Job Sequencing Problem
+sol-
+bool static comparison(Job a, Job b) {
+         return (a.profit > b.profit);
+      }
+   //Function to find the maximum profit and the number of jobs done
+   pair < int, int > JobScheduling(Job arr[], int n) {
+
+      sort(arr, arr + n, comparison);
+      int maxi = arr[0].dead;
+      for (int i = 1; i < n; i++) {
+         maxi = max(maxi, arr[i].dead);
+      }
+
+      int slot[maxi + 1];
+
+      for (int i = 0; i <= maxi; i++)
+         slot[i] = -1;
+
+      int countJobs = 0, jobProfit = 0;
+
+      for (int i = 0; i < n; i++) {
+         for (int j = arr[i].dead; j > 0; j--) {
+            if (slot[j] == -1) {
+               slot[j] = i;
+               countJobs++;
+               jobProfit += arr[i].profit;
+               break;
+            }
+         }
+Problem 3-Fractional Knapsack Problem 
+sol-
+ bool static comp(Item a, Item b) {
+         double r1 = (double) a.value / (double) a.weight;
+         double r2 = (double) b.value / (double) b.weight;
+         return r1 > r2;
+      }
+   // function to return fractionalweights
+   double fractionalKnapsack(int W, Item arr[], int n) {
+
+      sort(arr, arr + n, comp);
+
+      int curWeight = 0;
+      double finalvalue = 0.0;
+
+      for (int i = 0; i < n; i++) {
+
+         if (curWeight + arr[i].weight <= W) {
+            curWeight += arr[i].weight;
+            finalvalue += arr[i].value;
+         } else {
+            int remain = W - curWeight;
+            finalvalue += (arr[i].value / (double) arr[i].weight) * (double) remain;
+            break;
+         }
+      }
+
+      return finalvalue;
+
+   }
+Problem 4-Find minimum number of coins
+sol-
+#include<bits/stdc++.h>
+using namespace std;
+int main() {
+  int V = 49;
+  vector < int > ans;
+  int coins[] = {1, 2, 5, 10, 20, 50, 100, 500, 1000};
+  int n = 9;
+  for (int i = n - 1; i >= 0; i--) {
+    while (V >= coins[i]) {
+      V -= coins[i];
+      ans.push_back(coins[i]);
+    }
+  }
+  cout<<"The minimum number of coins is "<<ans.size()<<endl;
+  cout<<"The coins are "<<endl;
+  for (int i = 0; i < ans.size(); i++) {
+    cout << ans[i] << " ";
+  }
+  return 0;
+}
+Problem 5-N meetings in one room
+sol-bool static comparator(struct meeting m1, meeting m2) {
+         if (m1.end < m2.end) return true;
+         else if (m1.end > m2.end) return false;
+         else if (m1.pos < m2.pos) return true;
+         return false;
+      }
+   void maxMeetings(int s[], int e[], int n) {
+      struct meeting meet[n];
+      for (int i = 0; i < n; i++) {
+         meet[i].start = s[i], meet[i].end = e[i], meet[i].pos = i + 1;
+      }
+
+      sort(meet, meet + n, comparator);
+
+      vector < int > answer;
+
+      int limit = meet[0].end;
+      answer.push_back(meet[0].pos);
+
+      for (int i = 1; i < n; i++) {
+         if (meet[i].start > limit) {
+            limit = meet[i].end;
+            answer.push_back(meet[i].pos);
+         }
+      }
+      cout<<"The order in which the meetings will be performed is "<<endl;
+      for (int i = 0; i < answer.size(); i++) {
+         cout << answer[i] << " ";
+      }
+
+   }
