@@ -1,1 +1,140 @@
+Problem 1-Reverse Words in a String
+sol-
+ string reverseWords(string s) {
+        string ans="",temp="";
+        stack<string>st;
+        for(int i=0;i<s.length();i++){
+            if(s[i]==' '){
+                if(temp!=""){
+                    st.push(temp);
+                }
+                temp="";
+            }
+            else{
+                temp+=s[i];
+            }
+        }
+        if(temp.size()){
+            st.push(temp);
+        }
+        while(!st.empty()){
+            ans+=st.top();
+            st.pop();
+            ans+=" ";
+        }
+        ans.pop_back();
+        return ans;
+    }
+Problem 2-Longest Palindromic Substring
+sol-
+string longestPalindrome(string s) {
+         int n = s.size();
+        vector<vector<bool>> dp(n+1,vector<bool>(n+1,0));
+        string str ="";
+        
+        for(int gap = 0 ; gap <=n ; gap++){
+            for(int i = 0 , j = gap ; j<= n ; j++, i++){
+                
+                if(gap == 0)
+                    dp[i][j] =true;   
+                
+                else if(gap ==1 && s[i] == s[j])
+                    dp[i][j] = true;
+                
+                else if( s[i] == s[j] && dp[i + 1][j - 1])
+                    dp[i][j] = true;
+                
+                else 
+                    dp[i][j] = false;
+                
+                if(dp[i][j] && j - i + 1 > str.size())
+                    str = s.substr(i, j - i + 1); 
+                    
+            }
+        }
+        return str;
+Problem 3- Roman to Integer
+sol-
+    int romanToInt(string s) {
+        unordered_map<char,int> mp{
+            {'I',1},
+            {'V',5},
+            {'X',10},
+            {'L',50},
+            {'C',100},
+            {'D',500},
+            {'M',1000},
+        };
+        int ans = 0;
+        for(int i=0;i<s.size();i++){
+            if(mp[s[i]]<mp[s[i+1]])
+            {
+                ans-=mp[s[i]];
+            }
+            else
+                ans+=mp[s[i]];
+        }
+        return ans;
+    }
+Problem 4-tring to Integer (atoi)
+sol-
+class Solution {
+public:
+    int myAtoi(string s) {
+        long long int ans = 0;
+        int i=0,n=s.size();
+        int sign = 1;
+        while(i<n && s[i]==' '){
+            i++;
+        }
 
+        if(i<n && s[i]=='+' && s[i+1]!='-'){
+            sign = 1;
+            i++;
+        }
+
+        if(i<n && s[i]=='-' && s[i+1]!='+'){
+            sign = -1;
+            i++;
+        }
+
+        while(i<n && isdigit(s[i])){
+            int digit = s[i]-'0';
+            if(ans>INT_MAX/10 || (ans==INT_MAX/10 && digit>INT_MAX%10)){
+                return sign==1 ? INT_MAX : INT_MIN;
+            }
+            ans = ans*10+digit;
+            i++;
+        }
+
+        return ans*sign;
+        
+        
+    }
+};
+Problem 5- Longest Common Prefix
+sol-
+string longestCommonPrefix(vector<string>& strs) {
+        int n = strs.size();
+        string ans = "";
+        for(int i=0;i<strs[0].length();i++)
+        {
+            char ch = strs[0][i];
+            bool match = true;
+            
+            for(int j=1;j<n;j++)
+            {
+                if(strs[j].size()<i || ch!=strs[j][i])
+                {
+                     match = false;
+                    break;
+                }
+            }
+            if(match==  false)
+            {
+                break;
+            }
+            else
+                ans.push_back(ch);
+        }
+        return ans;
