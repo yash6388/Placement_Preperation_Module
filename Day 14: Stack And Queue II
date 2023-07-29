@@ -1,1 +1,260 @@
+Problem 1-LRU Cache
+sol-
+class LRUCache {
+    class node{
+     public:
+     int val;
+     int key;
+     node* next;
+     node* prev;
+     node(int key,int val){
+         this->key=key;
+         this->val=val;
+     }
+    };
+    node* head=new node(-1,-1);
+    node* tail=new node(-1,-1);
+   
+    int cap;
+    unordered_map<int,node*>m;
+public:
+    LRUCache(int capacity) {
+        cap=capacity;
+         head->next=tail;
+         tail->prev=head;
+    }
+    void addnode(node * newnode){
+
+        newnode->next=head->next;
+        head->next->prev=newnode;
+        newnode->prev=head;
+        head->next=newnode;
+    }
+    void deletenode(node* temp){
+        node* nextnode=temp->next;
+        node* prevnode=temp->prev;
+        prevnode->next=nextnode;
+        nextnode->prev=prevnode;
+    }
+    
+    int get(int key) {
+        if(m.find(key)!=m.end()){
+           node* temp=m[key];
+           int val=temp->val;
+            m.erase(key);
+           deletenode(temp);
+           addnode(new node(key,val));
+           m[key]=head->next;
+           return val;
+        }
+        return -1;
+    }
+    
+    void put(int key, int value) {
+        if(m.find(key)!=m.end()){
+            node* temp=m[key];
+            deletenode(temp);
+            m.erase(key);
+        }
+        if(m.size()==cap){
+         m.erase(tail->prev->key);
+         deletenode(tail->prev);
+        }
+        addnode(new node(key,value));
+        m[key]=head->next;
+
+    }
+};
+Problem 2- LFU Cache
+sol-
+ublic:
+    int capacity;
+    int n = 0;
+    // Map: key -> values
+    unordered_map<int, int> values;
+    // Map: key -> counts
+    unordered_map<int, int> counts;
+    unordered_map<int, list<int>> lru;
+    unordered_map<int, list<int>::iterator> key2node;
+    int minimum_count = INT_MAX;
+
+    LFUCache(int capacity)
+    {
+        this->capacity = capacity;
+    }
+    void update_count(int key)
+    {
+        // Get the current count for the key
+        int &count = counts[key];
+        if (key2node.find(key) != key2node.end())
+            lru[count].erase(key2node[key]);
+        count++;
+        lru[count].push_front(key);
+        // Store a reference to the node the key is stored in
+        key2node[key] = lru[count].begin();
+        if (minimum_count != INT_MAX && lru[minimum_count].empty())
+            minimum_count = INT_MAX;
+        minimum_count = min(minimum_count, count);
+    }
+
+    int get(int key)
+    {
+        if (values.find(key) == values.end())
+            return -1;
+
+        update_count(key);
+
+        return values[key];
+    }
+
+    void put(int key, int value)
+    {
+        if (capacity == 0)
+            return;
+        if (values.find(key) != values.end())
+        {
+            values[key] = value;
+            update_count(key);
+            return;
+        }
+        if (n < capacity)
+        {
+            values[key] = value;
+            update_count(key);
+            n++;
+            return;
+        }
+        int invalid_key = lru[minimum_count].back();
+        lru[minimum_count].pop_back();
+        values.erase(invalid_key);
+        counts.erase(invalid_key);
+        key2node.erase(invalid_key);
+        values[key] = value;
+        update_count(key);
+    }
+};
+Problem 3-Largest Rectangle in Histogram
+sol-
+class Solution {
+    private:
+    vector<int>nextsmallerElement(vector<int>& arr,int n)
+    {
+
+    stack<int> s;
+    s.push(-1);
+    vector<int> ans(n);
+    for (int i=n-1;i>=0;i--)
+    {
+        int curr=arr[i];
+        while(s.top()!=-1 && arr[s.top()]>=curr)
+        {
+            s.pop();
+        }
+        ans[i]=s.top();
+        s.push(i);
+    }
+return ans;
+    }
+
+    vector<int>PresmallerElement(vector<int>&arr,int n)
+    {
+        stack<int> s;
+    s.push(-1);
+    vector<int> ans(n);
+    for (int i=0;i<n;i++)
+    {
+        int curr=arr[i];
+        while(s.top()!=-1 && arr[s.top()]>=curr)
+        {
+            s.pop();
+        }
+        ans[i]=s.top();
+        s.push(i);
+    }
+return ans;
+
+
+    }
+public:
+    int largestRectangleArea(vector<int>& heights) {
+        
+   int n=heights.size();
+   vector<int>next(n);
+   vector<int>prev(n);
+   next=nextsmallerElement(heights,n);
+
+   prev=PresmallerElement(heights,n);
+
+    int area=INT_MIN;
+    for(int i=0;i<n;i++)
+    {
+        int l=heights[i];
+        if(next[i]==-1)
+        {
+            next[i]=n;
+        }
+        int b=next[i]-prev[i]-1;
+        int newarea=l*b;
+        area=max(area,newarea);
+    }
+    return area;
+    }
+};
+Problem 4-Min Stack
+sol-
+stack<int>s;
+stack<int>ss;
+    MinStack() {
+       
+    }
+    
+    void push(int val) {
+       s.push(val);
+       if(ss.size()==0||ss.top()>=val) 
+       ss.push(val);
+    }
+    
+    void pop() {
+     if(ss.size()==0){
+         return ;
+     }   
+     int ans =s.top();
+     s.pop();
+     if(ss.top()==ans)
+     ss.pop();
+    }
+    
+    int top() {
+    return   s.top();
+    }
+    
+    int getMin() {
+     if(ss.size()==0){
+         return -1;
+     }   
+     return ss.top();
+    }
+Problem 5-Rotting Oranges
+sol-
+ void dfs(vector<vector<int>>& grid,vector<vector<bool>> vis,vector<vector<int>>& time,int i,int j,int t,bool start){
+        if(!(i<grid.size()&&i>=0&&j<grid[0].size()&&j>=0)) return;
+        if(vis[i][j]||grid[i][j]==0 || (grid[i][j]==2 && !start)) return;
+        vis[i][j]=true;
+        time[i][j]=min(t,time[i][j]);
+        dfs(grid,vis,time,i-1,j,t+1,false);
+        dfs(grid,vis,time,i,j-1,t+1,false);
+        dfs(grid,vis,time,i+1,j,t+1,false);
+        dfs(grid,vis,time,i,j+1,t+1,false);
+    } 
+    int orangesRotting(vector<vector<int>>& grid) {
+        vector<vector<int>> start;
+        for(int i=0;i<grid.size();i++) for(int j=0;j<grid[0].size();j++) if(grid[i][j]==2) start.push_back({i,j});
+        vector<vector<bool>> vis(grid.size(),vector<bool>(grid[0].size(),false));
+        vector<vector<int>> time(grid.size(),vector<int>(grid[0].size(),INT_MAX));
+        for(auto v:start) dfs(grid,vis,time,v[0],v[1],0,true);
+        int ans=0;
+        for(int i=0;i<grid.size();i++)for(int j=0;j<grid[0].size();j++) if(grid[i][j]==1) ans=max(time[i][j],ans);
+       
+        return ans==INT_MAX?-1:ans;
+    }
 
