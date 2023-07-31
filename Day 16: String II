@@ -1,1 +1,137 @@
+Problem 1-Find the Index of the First Occurrence in a String
+sol-
+class Solution {
+public:
+    int strStr(string haystack, string needle) {
+        return haystack.find(needle);
+    }
+};
+Problem 2- Valid Anagram
+sol-
+public:
+    bool isAnagram(string s, string t) {
+        unordered_map<char,int> mp;
+        int len1 = s.length();
+        int len2  = t.length();
+        if(len1!=len2)
+            return false;
+        for(int i=0;i<len1;i++)
+        {
+            mp[s[i]]++;
+        }
+        for(int i=0;i<len1;i++)
+        {
+            mp[t[i]]--;
+        }
+        for(int i=0;i<mp.size();i++)
+        {
+            if(mp[i]!=0)
+                return false;
+        }
+        return true;
+    }
+Problem 3-Count and Say
+sol-
+class Solution {
+public:
+    string Say(string s){
+        string ans;
+        map<char,int> mp;
+        for(int i=0;i<s.length();i++){
+            if(mp.find(s[i])==mp.end() && mp.size()>0){
+                auto it = mp.begin();
+                string count = to_string(it->second);
+                ans.push_back(count[0]);
+                ans.push_back(it->first);
 
+                mp.erase(it->first);
+            }
+            mp[s[i]]++;
+        }
+
+        if(mp.size()){
+            auto it = mp.begin();
+            string count = to_string(it->second);
+            ans.push_back(count[0]);
+            ans.push_back(it->first);
+            mp.erase(it->first);
+        }
+
+        return ans;
+    }
+    string countAndSay(int n) {
+        if(n==1) return "1";
+        string st = countAndSay(n-1);
+        return Say(st);
+    }
+};
+Problem 4-Compare Version Numbers
+sol-
+class Solution {
+public:
+    int compareVersion(string version1, string version2) {
+        vector<int> v1, v2;
+        long long ans = 0;
+        for(int i=0;i<version1.size();i++){
+            if(version1[i]=='.'){
+                v1.push_back(ans);
+                ans = 0;
+            }
+            else{
+                ans = ans*10 + (version1[i]-'0');
+            }
+        }
+        v1.push_back(ans);
+        ans = 0;
+        for(int i=0;i<version2.size();i++){
+            if(version2[i]=='.'){
+                v2.push_back(ans);
+                ans = 0;
+            }
+            else{
+                ans = ans*10 + (version2[i]-'0');
+            }
+        }
+        v2.push_back(ans);
+        
+        if(v1.size()<v2.size()){
+            while(v1.size()!=v2.size()) v1.push_back(0);
+        }
+        else{
+            while(v1.size()!=v2.size()) v2.push_back(0);
+        }
+        
+        for(int i=0;i<v1.size();i++){
+            if(v1[i]<v2[i]) return -1;
+            if(v1[i]>v2[i]) return 1;
+        }
+        return 0;
+    }
+};
+Problem 5-String Compression
+sol-
+int compress(vector<char>& chars) {
+        int n = chars.size();
+        if (n == 1) {
+            return 1;
+        }
+        
+        int i = 0, j = 0;
+        while (i < n) {
+            int count = 1;
+            while (i < n - 1 && chars[i] == chars[i + 1]) {
+                count++;
+                i++;
+            }
+            
+            chars[j++] = chars[i++];
+            if (count > 1) {
+                string countStr = to_string(count);
+                for (char c : countStr) {
+                    chars[j++] = c;
+                }
+            }
+        }
+        
+        return j;
+    }
