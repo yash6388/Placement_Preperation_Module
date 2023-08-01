@@ -1,1 +1,131 @@
+Problem 1-Binary Tree Level Order Traversal
+sol-
+ void trav(TreeNode* root,vector<vector<int>>& ans,int c){
+        if(root==nullptr)
+        return;
+        if(ans.size() == c)
+        ans.push_back(vector<int>());
+        ans[c].push_back(root->val);
+        c++;
+        trav(root->left,ans,c);
+        trav(root->right,ans,c);
+    }
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>> ans;
+        trav(root,ans,0);
+        return ans;
+    }
+Problem 2-Maximum Depth of Binary Tree
+sol-
+int maxDepth(TreeNode* root) {
+        if(root == NULL){
+            return 0;
+        }
+        else return max(maxDepth(root->left),maxDepth(root->right)) +1;
+    }
+Problem 3-Diameter of Binary Tree
+sol-
+int solve(TreeNode* root, int &diameter){
+        if(root==NULL) return 0;
 
+        int leftheight=solve(root->left, diameter);
+        int rightheight=solve(root->right, diameter);
+
+        diameter=max(diameter, leftheight+rightheight);
+
+        return 1+max(leftheight, rightheight);
+    }
+
+    int diameterOfBinaryTree(TreeNode* root) {
+        int diameter=0;
+        solve(root, diameter);
+        return diameter;
+    }
+Problem 4-Balanced Binary Tree
+sol-
+int height(TreeNode* root){
+       if(root==NULL)
+       return 0;
+       int left = height(root->left);
+       int right = height(root->right);
+       int ans = max(left,right)+1;
+       return ans;
+   }
+
+    bool isBalanced(TreeNode* root) {
+        if(root == NULL){
+            return true;
+        }
+        bool left = isBalanced(root->left);
+        bool right = isBalanced(root->right);
+        bool diff = abs(height(root->left)-height(root->right))<=1;
+        if(left && right && diff)
+        return 1;
+        else 
+        return false;
+    }
+Problem 5-Lowest Common Ancestor of a Binary Tree
+sol-
+ TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* n1, TreeNode* n2) {
+     if(root==NULL || root==n1 || root==n2) return root;
+
+        TreeNode* left  = lowestCommonAncestor(root->left,n1,n2);
+        TreeNode* right = lowestCommonAncestor(root->right,n1,n2);
+
+        if(left==NULL){
+            return right;
+        }
+
+        else if(right == NULL){
+            return left;
+        }
+        else{
+            return root;
+        }    
+    }
+Problem 6-Same Tree
+sol-
+ bool isSameTree(TreeNode* p, TreeNode* q) {
+         if(p==NULL && q==NULL){
+            return true ;
+        }
+        if(p==NULL || q==NULL){
+            return false ;
+        }
+        if(p->val==q->val)
+            return (isSameTree(p->left,q->left) && isSameTree(p->right,q->right)) ;
+        
+        return false ;
+    }
+Problem 7-Binary Tree Zigzag Level Order Traversal
+sol-
+vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+        vector<vector<int>> ans;
+        queue<TreeNode*> q;
+        q.push(root);
+        int count = 0;
+        if(root==NULL)
+        return ans;
+        while(1){
+            int size = q.size();
+            if(size==0)
+            return ans;
+            count++;
+            vector<int> data;
+            while(size>0){
+                TreeNode* temp = q.front();
+                q.pop();
+                data.push_back(temp->val);
+                if(temp->left!=NULL)
+                   q.push(temp->left);
+                if(temp->right!=NULL){
+                    q.push(temp->right);
+                }
+                size--;
+            }
+            if(count%2==0)
+            reverse(data.begin(),data.end());
+            ans.push_back(data);
+        }
+        return ans;
+    }
