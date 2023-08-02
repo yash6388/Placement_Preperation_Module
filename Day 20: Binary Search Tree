@@ -1,0 +1,131 @@
+Problem 1- Populating Next Right Pointers in Each Node
+sol-
+Node* connect(Node* root) {
+        
+        if(!root)return NULL;
+
+        Node *h=root;
+        queue<Node *> order;
+        order.push(root);
+
+        while(!order.empty()){
+            int size=order.size();
+            Node *prev=NULL;
+
+            for(int i=0;i<size;i++){
+                Node * cur=order.front();
+                order.pop();
+                if(cur->left)order.push(cur->left);
+                if(cur->right)order.push(cur->right);
+
+                if(prev)prev->next=cur;
+                prev=cur;
+            }
+            prev->next=NULL;
+        }
+
+        
+        return h;
+    }
+Problem 2-Search in a Binary Search Tree
+sol-
+TreeNode* searchBST(TreeNode* root, int val) {
+        if(root->val==val)
+       {
+           return root;
+       }
+       TreeNode* tmp=root;
+
+       while(tmp!=NULL)
+       {
+           if(tmp->val>val)
+           {
+               tmp=tmp->left;
+           }
+           else if(tmp->val<val)
+           {
+               tmp=tmp->right;
+           }
+           else
+           {
+               return tmp;
+           }
+       }
+       TreeNode* nULL=NULL;
+       return nULL;
+    }
+Problem 3-Convert Sorted Array to Binary Search Tree
+sol-
+TreeNode* inordertobst(int s,int e,vector<int>& nums){
+        if(s>e)
+        return NULL;
+        int mid = (s+e)/2;
+        TreeNode* root = new TreeNode(nums[mid]);
+        root->left = inordertobst(s,mid-1,nums);
+        root->right = inordertobst(mid+1,e,nums);
+        return root;
+    }
+
+    TreeNode* sortedArrayToBST(vector<int>& nums) {
+        int s=0;
+        int e = nums.size()-1;
+        return inordertobst(s,e,nums);
+    }
+Problem 4-Construct Binary Search Tree from Preorder Traversal
+sol-
+ TreeNode* insert(TreeNode*root , int i){
+        if(!root){
+            return new TreeNode(i);
+        }
+        if(i<root->val){
+            root->left = insert(root->left , i);
+        }
+        if(i>root->val){
+            root->right = insert(root->right , i);
+        }
+        return root;
+    }
+    TreeNode* bstFromPreorder(vector<int>&p){
+        if(p.size()==0){
+            return NULL;
+        }
+        TreeNode*t = NULL;
+        for(auto i:p){
+            t = insert(t , i);
+        }
+        return t;
+    }
+Problem 5-Validate Binary Search Tree
+sol-
+vector<int> numbers;
+   void inorderpush(TreeNode* root){
+    if(root==nullptr){
+        return;
+    }
+    inorderpush(root->left);
+    numbers.push_back(root->val);//inserts the element in array
+    inorderpush(root->right);
+}
+
+bool isValidBST(TreeNode* root) {
+    inorderpush(root);
+
+    for(int i=0;i<numbers.size()-1;i++){
+        if(numbers[i+1]<=numbers[i]){
+            return false;//if array is not strictly increasing
+        }
+    }
+    return true;
+    }
+Problem 6-Lowest Common Ancestor of a Binary Search Tree
+sol-
+ TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        while (root) {
+            if (p->val < root->val && q->val < root->val)
+                root = root->left;
+            else if (p->val > root->val && q->val > root->val)
+                root = root->right;
+            else return root;
+        }
+        return root;
+    }
