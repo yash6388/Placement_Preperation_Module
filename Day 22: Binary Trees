@@ -1,1 +1,102 @@
+Problem 1-Flatten Binary Tree to Linked List
+sol-
+ TreeNode* Find(TreeNode* root){
+        while(root->right){
+            root = root->right;
+        }
+        return root;
+    }
+    void flatten(TreeNode* root) {
+        if(root){
+            flatten(root->left);
+            if(root->left){
+                TreeNode* nd = root->right;
+                TreeNode* lastLeftNode=Find(root->left);
+                root->right = root->left;
+                root->left=NULL;
+                lastLeftNode->right = nd;
+            }
+            flatten(root->right);
+        }
+        
+    }
+Problem 2- Find Median from Data Stream
+sol-
+ priority_queue<int> s, b;
+    MedianFinder() {
+        
+    }
+    
+    void addNum(int num) {
+        s.push(num);
+        if(s.size()>b.size()){
+            int a = s.top();
+            s.pop();
+            b.push(-1*a);
+        }else{
+            if(s.top() > -1*b.top()){
+                int temp = -1*b.top();
+                b.pop();
+                b.push(-1*s.top());
+                s.pop();
+                s.push(temp);
+            }
+        }
+    }
+    
+    double findMedian() {
+        if((s.size()+b.size())%2){
+            return -1*b.top();
+        }else{
+            return (s.top()+-1*b.top())/2.0;
+        }
+    }
+Problem 3-Kth Largest Element in a Stream
+sol-
+ int K;
+    priority_queue<int,vector<int>,greater<int>> pq;
+    KthLargest(int k, vector<int>& nums) {
+        K = k;
+        for(auto &i:nums)
+        {
+            pq.push(i);
+            if(pq.size()>K)
+            pq.pop();
+        }
+    }
+    
+    int add(int val) {
+        pq.push(val);
+        if(pq.size()>K)
+        pq.pop();
+        return pq.top();
+    }
+Problem 4-Kth Largest Element in an Array
+sol-
+nt findKthLargest(vector<int>& nums, int k) {
+         sort(nums.begin() , nums.end() , greater<int>());
+        return nums[k-1];
+    }
+};
+Problem 5- Flood Fill
+sol-
+  void dfs(vector<vector<int>>& image, int i, int j,int val, int newColor)
+    {
+        if(i<0 || i>=image.size() || j<0 || j>= image[0].size() || image[i][j] == newColor || image[i][j] != val)
+        {
+            return;
+        }
+        image[i][j] = newColor;
+        dfs(image,i-1,j,val,newColor);
+        dfs(image,i+1,j,val,newColor);
+        dfs(image,i,j-1,val,newColor);
+        dfs(image,i,j+1,val,newColor);
+    }
+    
+    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int newColor)
+    {
+        int val = image[sr][sc];
+        dfs(image,sr,sc,val,newColor);
+        return image;
+    }
 
