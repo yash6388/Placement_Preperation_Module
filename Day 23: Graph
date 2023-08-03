@@ -1,1 +1,293 @@
+Problem 1-Clone Graph
+sol-
+ unordered_map<Node* , Node*> mp; 
+    
+    Node* cloneGraph(Node* node) {
+        if(node == NULL)
+        {
+            return NULL;
+        }
+        if(mp.find(node) == mp.end()) // if not present in map
+        {
+            mp[node] = new Node(node -> val, {}); // make a copy
+            
+            for(auto adj: node -> neighbors) // travel in adjcant
+            {
+                mp[node] -> neighbors.push_back(cloneGraph(adj)); //add copy
+            }
+        }
+        
+        return mp[node];
+        
+    }
+Problem 2-DFS of Graph
+sol-
+  void dfs(int vertex, vector<int> adj[], bool vis[], vector<int>& ans) {
+        
+        vis[vertex] = true;
+        ans.push_back(vertex);
+        
+        for (int child : adj[vertex]) {
+            
+            if (vis[child] == true) continue;
+            
+            dfs(child, adj, vis, ans);
+          
+        }
+    }
+    vector<int> dfsOfGraph(int V, vector<int> adj[]) {
+        vector<int> ans;
+        bool vis[V];
+        memset(vis, false, sizeof(vis));
+        // Initialize vis array to false
+        dfs(0, adj, vis, ans);
+        
+        return ans;
+    }
+Problem 3-BFS of graph
+sol-
+  void bfs(int vertex, vector<int> adj[], vector<int> &ans, bool vis[]){
+        
+        queue<int> q;
+        q.push(vertex);
+        vis[vertex]= true;
+        
+        while(!q.empty()){
+            
+            int current = q.front();
+            ans.push_back(current);
+            q.pop();
+            
+            for(int child: adj[current]){
+                if(vis[child]==true) continue;
+                q.push(child);
+                vis[child] = true;
+            }
+        }
+    }
+    
+    vector<int> bfsOfGraph(int V, vector<int> adj[]) {
 
+        vector<int> ans;
+        bool vis[V]= {false};
+        bfs(0, adj, ans, vis);
+        return ans;
+    }
+Problem 4-Course Schedule
+sol-
+ bool canFinish(int V, vector<vector<int>>& prerequisites) {
+        vector<int> adj[V];
+	    
+	    for(auto it:prerequisites){
+	        
+	        adj[it[1]].push_back(it[0]);
+	    }
+	    
+	    vector<int> indegree(V,0);
+	    
+	    for(int i=0;i<V;i++){
+	        
+	        for(auto it:adj[i]){
+	            
+	            indegree[it]++;
+	        }
+	    }
+	    
+	    queue<int> q;
+	    
+	    for(int i=0;i<V;i++){
+	        
+	        if(indegree[i]==0){
+	            
+	            q.push(i);
+	        }
+	    }
+	    
+	    vector<int> topo;
+	    
+	    while(!q.empty()){
+	        
+	        int node = q.front();
+	        q.pop();
+	        topo.push_back(node);
+	        
+	        for(auto it:adj[node]){
+	            
+	            indegree[it]--;
+	            if(indegree[it]==0)
+	            q.push(it);
+	        }
+	    }
+	    
+	    if(topo.size()==V)
+	    return true;
+	    else
+	    return false;
+    }
+Problem 5-Course Schedule
+sol-
+ bool canFinish(int V, vector<vector<int>>& prerequisites) {
+        vector<int> adj[V];
+	    
+	    for(auto it:prerequisites){
+	        
+	        adj[it[1]].push_back(it[0]);
+	    }
+	    
+	    vector<int> indegree(V,0);
+	    
+	    for(int i=0;i<V;i++){
+	        
+	        for(auto it:adj[i]){
+	            
+	            indegree[it]++;
+	        }
+	    }
+	    
+	    queue<int> q;
+	    
+	    for(int i=0;i<V;i++){
+	        
+	        if(indegree[i]==0){
+	            
+	            q.push(i);
+	        }
+	    }
+	    
+	    vector<int> topo;
+	    
+	    while(!q.empty()){
+	        
+	        int node = q.front();
+	        q.pop();
+	        topo.push_back(node);
+	        
+	        for(auto it:adj[node]){
+	            
+	            indegree[it]--;
+	            if(indegree[it]==0)
+	            q.push(it);
+	        }
+	    }
+	    
+	    if(topo.size()==V)
+	    return true;
+	    else
+	    return false;
+    }
+Problem 6-Topological sort
+sol-
+ void dfs(vector<int> adj[] , int s , stack<int>&stk , vector<bool>&visited)
+    {
+        visited[s]=true;
+        
+        for(int x : adj[s])
+        {
+            if(visited[x]==false)
+            {
+                dfs(adj , x , stk , visited);
+            }
+        }
+        stk.push(s);
+    }
+vector<int> topoSort(int V, vector<int> adj[]) 
+{
+    // code here
+    vector<bool>visited(V,false);
+    
+    stack<int>stk;
+    
+    for(int i=0 ; i<V ; i++)
+    {
+        if(visited[i]==false)
+        {
+            dfs( adj , i , stk , visited);
+        }
+    }
+    
+    vector<int>ans;
+    
+    while(!stk.empty())
+    {
+        ans.push_back(stk.top());
+        stk.pop();
+    }
+    
+    return ans;
+    
+}
+Problem 7-Number of Islands
+sol-
+nt numIslands(vector<vector<char>>& grid) {
+        int noofisland=0;
+        for(int i=0;i<grid.size();i++)
+        {
+            for(int j=0;j<grid[0].size();j++)
+            {
+                if(grid[i][j]=='0' || grid[i][j]=='2')
+                {
+                }
+                else
+                {
+                    noofisland++;
+                    maketwo(grid,i,j+1);
+                    maketwo(grid,i,j-1);
+                    maketwo(grid,i-1,j);
+                    maketwo(grid,i+1,j);
+                }
+            }
+        }
+        return noofisland;
+    }
+    void maketwo(vector<vector<char>>& grid,int a,int b)
+    {
+        int r=grid.size();
+        int c=grid[0].size();
+        if(a<0 || b<0 || a>=r || b>=c)
+            return;
+        if(grid[a][b]=='0')
+            return;
+        if(grid[a][b]=='2')
+            return;
+        if(grid[a][b]=='1')
+        {
+            grid[a][b]='2';
+            maketwo(grid,a,b+1);
+            maketwo(grid,a,b-1);
+            maketwo(grid,a-1,b);
+            maketwo(grid,a+1,b);
+        }
+    }
+Problem 8- Is Graph Bipartite?
+sol-
+ bool bfs(int node,  vector<int>&color,vector<vector<int>>& graph){
+     queue<int>q;
+     color[node]=0;
+     q.push({node});
+     while(!q.empty()){
+          int curnode=q.front();
+          q.pop();
+          for(auto adjnode:graph[curnode]){
+               if(color[adjnode]!=-1 && color[curnode]==color[adjnode]){       
+                   return false;
+               }
+               else if(color[adjnode]==-1){
+                        color[adjnode]=!color[curnode];
+                        q.push(adjnode);
+               }
+          }
+     }
+     return true;
+ }
+    bool isBipartite(vector<vector<int>>& graph) {
+        int n=graph.size();// number of node;
+        vector<int>color(n,-1);
+        for(int i=0;i<n;i++){
+            if(color[i]==-1){
+                if( !bfs(i,color,graph)){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
