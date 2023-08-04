@@ -1,0 +1,106 @@
+Problem 1-Minimum Path Sum
+sol-
+int solve(vector<vector<int>>& grid, int row, int col, int m, int n, vector<vector<int>> &dp){
+
+          if(row<0||col<0||row>=m||col>=n)return INT_MAX;
+        if(row==m-1 && col==n-1)return dp[row][col]=grid[row][col];
+
+         if(dp[row][col]!=-1)
+         return dp[row][col];
+
+            int rightAns=solve(grid,row,col+1,m,n,dp);
+            int downAns = solve(grid,row+1,col,m,n,dp);
+
+           return dp[row][col]= min(rightAns,downAns) + grid[row][col];
+      }
+
+
+    int minPathSum(vector<vector<int>>& grid) {
+        
+        int m=grid.size();
+        int n=grid[0].size();
+         vector<vector<int>>dp(m,vector<int>(n,-1));
+        return solve(grid,0,0,m,n,dp);
+    }
+Problem 2-Coin Change
+sol-
+int coinChange(vector<int>& coins, int amount) {
+        vector<int> dp(amount + 1, amount + 1);
+    dp[0] = 0;
+
+    for (const int coin : coins)
+      for (int i = coin; i <= amount; ++i)
+        dp[i] = min(dp[i], dp[i - coin] + 1);
+
+    return dp[amount] == amount + 1 ? -1 : dp[amount];
+    }
+};
+Problem 3-Partition Equal Subset Sum
+sol-
+ bool canPartition(vector<int>& nums) {
+        int sum = 0; 
+      sum = accumulate(nums.begin(), nums.end(), 0);
+      if(sum % 2)
+            return false;
+        bitset<10001> bits(1);
+
+        for(int i = 0; i < nums.size(); i++){
+            bits |= (bits << nums[i]);
+            }
+        return bits[sum / 2];
+    }
+Problem 4- Minimum Cost to Cut a Stick
+sol-
+nt find_min_cost(int l, int r, int i, int j, vector<int>& cuts, vector<vector<int>>& dp)
+    {
+        int len=r-l;
+        int min_cost=INT_MAX;
+        int k, cost;
+
+        if(i>j)
+        {
+            return 0;
+        }
+
+        if(dp[i][j]!=-1)
+        {
+            return dp[i][j];
+        }
+
+        for(k=i;k<=j;k++)
+        {
+            cost=len+find_min_cost(l,cuts[k],i,k-1,cuts,dp)+find_min_cost(cuts[k],r,k+1,j,cuts,dp);
+            min_cost=min(min_cost, cost);
+        }
+
+        return dp[i][j]=min_cost;
+    }
+
+    int minCost(int n, vector<int>& cuts) 
+    {
+        int i, j;
+        sort(cuts.begin(), cuts.end());
+        vector<vector<int>> dp(cuts.size()+3, vector<int> (cuts.size()+3, -1));
+        int min_cost=find_min_cost(0, n, 0, cuts.size()-1, cuts, dp);
+        return min_cost;
+
+    }
+Problem 5-Egg Dropping Puzzle
+sol-
+   int eggDropRec(int n, int k){
+        if(k == 0 || k == 1)
+            return k;
+        if(n == 1)
+            return k;
+        
+        
+        int mn = INT_MAX, x, res;
+        
+        for(x = 1; x <= k; x++){
+            res = max(eggDrop(n-1, x-1), eggDrop(n, k-x));
+            
+            mn = min(mn, res);
+        }
+        
+        return mn+1;
+    }
