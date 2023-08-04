@@ -1,0 +1,247 @@
+Problem 1-Implement Trie (Prefix Tree)
+sol-
+struct TrieNode {
+        bool isEnd;
+        TrieNode * children[26];
+    };
+    // Get Node ka function bana lo jis me isEnd false hoga
+    // aur indexs ki value 0 ho gi
+    TrieNode* getNode() {
+        TrieNode* newNode = new TrieNode();
+        newNode->isEnd = false;
+        for(int i = 0; i < 26; i++) {
+            newNode->children[i] = NULL;
+        }
+        return newNode;
+    }
+    // Root node bana lo;
+    TrieNode *root;
+    Trie() {
+        // Root me assign kara do
+        root = getNode();
+    }
+    
+    void insert(string word) {
+        // Crawler bana lo jo root ko point kare ga.
+        TrieNode *crawler = root;
+        for(auto ch: word) {
+            int index = ch - 'a';
+            // Check karo ki crawler k children ka index Null hai 
+            // agr null hai to iska matlab ki waha pe usko naya node bana k 
+            // assign kar do
+            if(crawler->children[index] == NULL) {
+                crawler->children[index] = getNode();
+            }
+            crawler = crawler->children[index];
+        }
+        crawler->isEnd = true;  
+    }
+    
+    bool search(string word) {
+        TrieNode *crawler = root;
+        for(auto ch: word) {
+            int index = ch - 'a';
+            if(crawler->children[index] == NULL) {
+                return false;
+            }
+            crawler = crawler->children[index];
+        }
+        if(crawler != NULL and crawler->isEnd == true) {
+            return true;
+        }  
+        return false;
+    }
+    
+    bool startsWith(string prefix) {
+        TrieNode *crawler = root;
+        int i = 0;
+        for(; i < prefix.size(); i++) {
+            char ch = prefix[i];
+            int index = ch - 'a';
+            if(crawler->children[index] == NULL) {
+                return false;
+            }
+            crawler = crawler->children[index];
+        }
+        if(i == prefix.size()) {
+            return true;
+        } 
+        return false;
+    }
+};
+Problem 2-Count Distinct Substrings
+sol-
+class TrieNode{
+
+    public:
+
+    char data;
+
+    TrieNode **children;
+
+    bool isTerminal;
+
+    TrieNode(char data){
+
+        this->data=data;
+
+        children=new TrieNode*[26];
+
+        for(int i=0;i<26;i++){
+
+            children[i]=NULL;
+
+        }
+
+        isTerminal=false;
+
+    }
+
+};
+
+Problem 3-Maximum XOR of Two Numbers in an Array
+sol-
+struct Node{
+    Node* links[2];
+    bool containskey(int bit){
+        return (links[bit] != NULL);
+    }
+    Node* get(int bit){
+        return links[bit];
+    }
+
+    void put(int bit, Node* node){
+        links[bit] = node;
+    }
+};
+class Trie{
+    public:
+    Node* root;
+    Trie(){
+        root = new Node();
+    }
+    public:
+    void insert(int num){
+        Node* node = root;
+        for(int i=31; i>=0; i--){
+            int bit = (num>>i)&1;
+            if(!node->containskey(bit)){
+                node->put(bit,new Node());
+            }
+            node = node->get(bit);
+        }
+        
+    }
+
+    int getmax(int num){
+        Node* node = root;
+        int maxNum = 0;
+        for(int i=31; i>=0; i--){
+            int bit = (num>>i)&1;
+            if(node->containskey(1-bit)){
+                maxNum = maxNum | (1<<i);
+                node = node->get(1-bit);
+            }
+            else{
+                node = node->get(bit);
+            }
+        }
+        return maxNum;
+    }
+};
+    int findMaximumXOR(vector<int>& nums) {
+        Trie trie;
+        for(int i=0; i<nums.size(); i++){
+            trie.insert(nums[i]);  
+        }
+        int mx = 0;
+        for(int i=0; i<nums.size(); i++){
+            mx = max(mx,trie.getmax(nums[i]));
+        }
+        return mx;
+    }
+Problem 4-Maximum XOR With an Element From Array
+sol-
+  Node*links[2];
+    bool containsKey(int bit){
+        return links[bit]!=NULL;
+    }
+    Node*getBit(int bit){
+        return links[bit];
+    }
+    void put(int bit,Node*node){
+        links[bit]=node;
+    }
+};
+class Trie{
+private:
+    Node*root;
+public:
+    Trie(){
+        root=new Node();
+    }
+    void insert(int num){
+        Node*node=root;
+        for(int i=31;i>=0;i--){
+            int bit=(num>>i)&1;
+            if(!node->containsKey(bit)){
+                node->put(bit,new Node());
+            }
+            node=node->getBit(bit);
+        }
+    }
+    int getmax(int num){
+        Node*node=root;
+        int maxi=0;
+        for(int i=31;i>=0;i--){
+            int bit=(num>>i)&1;
+            if(node->containsKey(1-bit)){
+                maxi=maxi | (1<<i);
+                node=node->getBit(1-bit);
+            }else node=node->getBit(bit);
+        }
+        return maxi;
+    }
+};
+class Solution {
+public:
+    vector<int> maximizeXor(vector<int>& nums, vector<vector<int>>& queries) {
+        sort(nums.begin(),nums.end());
+        int q=queries.size();
+        vector<pair<int,pair<int,int>>>oQ;
+        for(int i=0;i<q;i++){
+            oQ.push_back({queries[i][1],{queries[i][0],i}});
+        }
+        sort(oQ.begin(),oQ.end());
+        int ind=0,n=nums.size();
+        Trie T;
+        vector<int>ans(q,0);
+        for(int i=0;i<q;i++){
+            int ai=oQ[i].first;
+            int xi=oQ[i].second.first;
+            int qind=oQ[i].second.second;
+            while(ind<n and nums[ind]<=ai){
+                T.insert(nums[ind]);
+                ind++;
+            }
+            if(ind==0)ans[qind]=-1;
+            else ans[qind]=T.getmax(xi);
+        }
+        return ans;
+    }
+Problem 5-Power Set
+sol-
+vector<string> AllPossibleStrings(string s){
+    // Code here
+    vector<string>::iterator it1;
+    int n=s.length();
+    string temp="";
+    vector<string>ans;
+    print(0,temp,s,ans,n);
+    
+    sort(ans.begin(), ans.end());
+     vector<string>::iterator it1;
+    it1=ans.begin();
+    ans.erase(it1);
+    
+    return ans;
